@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken')
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
@@ -70,9 +71,10 @@ const run = async () => {
         })
 
         app.get('/reviews', async (req, res) => {
+            const price = req.params.price;
             const query = {};
             const cursor = reviewCollection.find(query);
-            const reviews = await cursor.toArray();
+            const reviews = await cursor.sort({ price: 1 }).toArray();
             res.send(reviews)
         })
 
